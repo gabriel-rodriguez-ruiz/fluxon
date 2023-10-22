@@ -6,11 +6,22 @@ Created on Sat Oct 21 11:37:41 2023
 """
 import numpy as np
 
+# Pauli matrices (class variables)
+sigma_0 = np.eye(2)
+sigma_x = np.array([[0, 1], [1, 0]])
+sigma_y = np.array([[0, -1j], [1j, 0]])
+sigma_z = np.array([[1, 0], [0, -1]])
+tau_0 = np.eye(2)
+tau_x = np.array([[0, 1], [1, 0]])
+tau_y = np.array([[0, -1j], [1j, 0]])
+tau_z = np.array([[1, 0], [0, -1]])
+
 class Hamiltonian:
-    """A class for 2D Bogoliubov-de-Gennes Hamiltonians.
-    
+    r"""A class for 2D Bogoliubov-de-Gennes Hamiltonians.
+
         Parameters
         ----------
+        
         L_x : int
             Number of sites in x-direction (horizontal).
         L_y : int
@@ -21,16 +32,23 @@ class Hamiltonian:
             2x2 matrix representing the hopping term in x of the Hamiltonian.
         hopping_y : ndarray
             2x2 matrix representing the hopping term in y of the Hamiltonian.
+    
+    .. math ::
+       \vec{c_{n,m}} = (c_{n,m,\uparrow},
+                        c_{n,m,\downarrow},
+                        c^\dagger_{n,m,\downarrow},
+                        -c^\dagger_{n,m,\uparrow})^T
+              
+        H_{S} = \sum_i^{L_x}\sum_j^{L_y} \mathbf{c}^\dagger_{i,j}\left[ 
+                    \text{onsite} \right] \mathbf{c}_{i,j}\nonumber
+        				+ 
+                    \sum_i^{L_x}\sum_j^{L_y-1}\left[\mathbf{c}^\dagger_{i,j}
+                    \left(\text{hopping_y} \right)\mathbf{c}_{i,j+1}
+                    + H.c.\right]
+                    +\sum_i^{L_x-1}\sum_j^{L_y}\left[\mathbf{c}^\dagger_{i,j}
+                     \left(\text{hopping_x} \right)\mathbf{c}_{i+1,j}
+                    + H.c.\right]
     """
-    # Pauli matrices (class variables)
-    sigma_0 = np.eye(2)
-    sigma_x = np.array([[0, 1], [1, 0]])
-    sigma_y = np.array([[0, -1j], [1j, 0]])
-    sigma_z = np.array([[1, 0], [0, -1]])
-    tau_0 = np.eye(2)
-    tau_x = np.array([[0, 1], [1, 0]])
-    tau_y = np.array([[0, -1j], [1j, 0]])
-    tau_z = np.array([[1, 0], [0, -1]])
     def __init__(self, L_x:int, L_y:int, onsite,
                  hopping_x, hopping_y):
         self.L_x = L_x
@@ -45,7 +63,15 @@ class Hamiltonian:
         and spin index alpha in {0,1,2,3} for i in {1, ..., L_x} and
         j in {1, ..., L_y}. The site (1,1) corresponds to the lower left real
         space position.
-        
+         
+            Parameters
+            ----------
+            i : int
+                Site index in x direction. 1<=i<=L_x
+            j : int
+                Positive site index in y direction. 1<=j<=L_y
+            alpha : int
+                Spin index. 0<=alpha<=3        
         .. math ::
             \text{Basis vector} = 
            (c_{11}, c_{12}, ..., c_{1L_y}, c_{21}, ..., c_{L_xL_y})^T
@@ -58,14 +84,7 @@ class Hamiltonian:
            (c_{1L_y} &... c_{L_xL_y})
                             
            (c_{11} &... c_{L_x1})
-         Parameters
-         ----------
-         i : int
-             Site index in x direction. 1<=i<=L_x
-         j : int
-             Positive site index in y direction. 1<=j<=L_y
-         alpha : int
-             Spin index. 0<=alpha<=3
+
         """
         if (i>self.L_x or j>self.L_y):
             raise Exception("Site index should not be greater than \
