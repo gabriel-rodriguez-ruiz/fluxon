@@ -5,18 +5,9 @@ Created on Sat Oct 21 11:37:41 2023
 @author: gabri
 """
 import numpy as np
+from pauli_matrices import tau_y, sigma_y
 
-# Pauli matrices (class variables)
-sigma_0 = np.eye(2)
-sigma_x = np.array([[0, 1], [1, 0]])
-sigma_y = np.array([[0, -1j], [1j, 0]])
-sigma_z = np.array([[1, 0], [0, -1]])
-tau_0 = np.eye(2)
-tau_x = np.array([[0, 1], [1, 0]])
-tau_y = np.array([[0, -1j], [1j, 0]])
-tau_z = np.array([[1, 0], [0, -1]])
-
-class Hamiltonian:
+class Hamiltonian(object):
     r"""A class for 2D Bogoliubov-de-Gennes Hamiltonians.
 
         Parameters
@@ -27,11 +18,11 @@ class Hamiltonian:
         L_y : int
             Number of sites in y-direction (vertical).
         onsite : ndarray
-            2x2 matrix representing the onsite term of the Hamiltonian.
+            4x4 matrix representing the onsite term of the Hamiltonian.
         hopping_x : ndarray
-            2x2 matrix representing the hopping term in x of the Hamiltonian.
+            4x4 matrix representing the hopping term in x of the Hamiltonian.
         hopping_y : ndarray
-            2x2 matrix representing the hopping term in y of the Hamiltonian.
+            4x4 matrix representing the hopping term in y of the Hamiltonian.
     
     .. math ::
        \vec{c_{n,m}} = (c_{n,m,\uparrow},
@@ -39,7 +30,7 @@ class Hamiltonian:
                         c^\dagger_{n,m,\downarrow},
                         -c^\dagger_{n,m,\uparrow})^T
               
-        H_{S} = \sum_i^{L_x}\sum_j^{L_y} \mathbf{c}^\dagger_{i,j}\left[ 
+        H = \sum_i^{L_x}\sum_j^{L_y} \mathbf{c}^\dagger_{i,j}\left[ 
                     \text{onsite} \right] \mathbf{c}_{i,j}\nonumber
         				+ 
                     \sum_i^{L_x}\sum_j^{L_y-1}\left[\mathbf{c}^\dagger_{i,j}
@@ -93,6 +84,10 @@ class Hamiltonian:
     def _get_matrix(self):
         """
         Matrix of the BdG-Hamiltonian.
+        Returns
+        -------
+        M : ndarray
+            Matrix of the BdG-Hamiltonian.
         """
         L_x = self.L_x
         L_y = self.L_y
@@ -121,4 +116,20 @@ class Hamiltonian:
                         M[self._index(i, j, alpha), self._index(i, j+1, beta)]\
                         = self.hopping_y[alpha, beta]
         return M + M.conj().T
- 
+    def is_charge_conjugation(self):
+        """
+        Check if charge conjugation is present.
+
+        Parameters
+        ----------
+        H : Hamltonian
+            H_BdG Hamiltonian.
+
+        Returns
+        -------
+        True or false depending if the symmetry is present or not.
+
+        """
+        C = np.kron(tau_y, sigma_y)     #charge conjugation operator
+        M = np.kron(np.eye(4), C)      
+        return np.all(np.linalg.inv(M) @ self.matrix @ M == -self.matrix.conj())
