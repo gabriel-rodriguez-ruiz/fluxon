@@ -30,18 +30,14 @@ class TrivialSuperconductor(Hamiltonian):
                         c^\dagger_{n,m,\downarrow},
                         -c^\dagger_{n,m,\uparrow})^T
        
-       H = \frac{1}{2} \sum_n^{L_x} \sum_m^{L_y} (-\mu \vec{c}^\dagger_{n,m}
-          \tau_z\sigma_0  \vec{c}_{n,m}) +
-           \frac{1}{2} \sum_n^{L_x-1} \sum_m^{L_y} \left(
-               \vec{c}^\dagger_{n,m}\left[ 
-            -t\tau_z\sigma_0 -
-            i\frac{\Delta}{2} \tau_x\sigma_x \right] \vec{c}_{n+1,m} 
-            + H.c. \right) +
-           \frac{1}{2} \sum_n^{L_x} \sum_m^{L_y-1}
-           \left( \vec{c}^\dagger_{n,m}\left[ 
-            -t\tau_z\sigma_0 -
-            i\frac{\Delta}{2} \tau_x\sigma_y \right] \vec{c}_{n,m+1}
-            + H.c. \right) 
+       H = \frac{1}{2} \sum_n^{L_x} \sum_m^{L_y} \vec{c}^\dagger_{n,m} \left(-\mu 
+          \tau_z\sigma_0 +\Delta_s\tau_x\sigma_0 \right) \vec{c}_{n,m}
+       + \frac{1}{2}
+       \sum_n^{L_x-1}\sum_m^{L_y}\left[\mathbf{c}^\dagger_{n,m}\left(-t\tau_z\sigma_0 \right)\mathbf{c}_{n+1,m}
+       + H.c.\right]
+       + \frac{1}{2}
+       \sum_n^{L_x}\sum_m^{L_y-1}\left[\mathbf{c}^\dagger_{n,m}\left(-t\tau_z\sigma_0 \right)\mathbf{c}_{n,m+1}
+       + H.c.\right]
     """
     def __init__(self, L_x:int, L_y:int, t:float, mu:float, Delta_s:float):
         self.t = t
@@ -50,20 +46,55 @@ class TrivialSuperconductor(Hamiltonian):
         super().__init__(L_x, L_y, self._get_onsite(), self._get_hopping_x(),
                          self._get_hopping_y())
     def _get_onsite(self):
-        return 1/2*(-self.mu)*np.kron(tau_z, sigma_0)
+        return 1/2*((-self.mu)*np.kron(tau_z, sigma_0) + self.Delta_s*np.kron(tau_x, sigma_0) )
     def _get_hopping_x(self):
-        return 1/2*(-self.t*np.kron(tau_z, sigma_0) \
-                - 1j/2*self.Delta_s*np.kron(tau_x, sigma_x))
+        return -1/2*self.t*np.kron(tau_z, sigma_0)
     def _get_hopping_y(self):
-        return 1/2*(-self.t*np.kron(tau_z, sigma_0) \
-                - 1j/2*self.Delta_s*np.kron(tau_x, sigma_y))
+        return -1/2*self.t*np.kron(tau_z, sigma_0)
             
-class TrivialSuperconductorPeriodicInY(PeriodicHamiltonianInY,
-                                       TrivialSuperconductor):
+class TrivialSuperconductorPeriodicInY(PeriodicHamiltonianInY):
     def __init__(self, L_x:int, L_y:int, t:float, mu:float, Delta_s:float):
         self.t = t
         self.mu = mu
         self.Delta_s = Delta_s
         super().__init__(L_x, L_y, self._get_onsite(), self._get_hopping_x(),
                          self._get_hopping_y())
+        self.t = t
+        self.mu = mu
+        self.Delta_s = Delta_s
+    def _get_onsite(self):
+        return 1/2*((-self.mu)*np.kron(tau_z, sigma_0) + self.Delta_s*np.kron(tau_x, sigma_0) )
+    def _get_hopping_x(self):
+        return -1/2*self.t*np.kron(tau_z, sigma_0)
+    def _get_hopping_y(self):
+        return -1/2*self.t*np.kron(tau_z, sigma_0)
+            
+class TrivialSuperconductorKY(Hamiltonian):
+    r"""
+    .. math::
+
+        H_{A1us} = \frac{1}{2}\sum_k H_{A1us,k}
+        
+        H_{S,k} = \sum_n^L \vec{c}^\dagger_n\left[ 
+            \xi_k\tau_z\sigma_0 + \Delta_0 \tau_x\sigma_0\right] +
+            \sum_n^{L-1}\left(\vec{c}^\dagger_n(-t\tau_z\sigma_0 )\vec{c}_{n+1}
+            + H.c. \right)
+        
+        \vec{c} = (c_{k,\uparrow}, c_{k,\downarrow},c^\dagger_{-k,\downarrow},-c^\dagger_{-k,\uparrow})^T
     
+        \xi_k = -2tcos(k) - \mu
+    """
+    def __init__(self,  k:float, L_x:int, t:float, mu:float, Delta_s:float):
+        self.t = t
+        self.mu = mu
+        self.Delta_s = Delta_s
+        self.k = k
+        super().__init__(L_x, 1, self._get_onsite(), self._get_hopping_x(),
+                         np.zeros((4, 4)))
+    def _get_onsite(self):
+        chi_k = -2*self.t*np.cos(self.k)-self.mu
+        return 1/2*( chi_k*np.kron(tau_z, sigma_0) +
+                self.Delta_s*np.kron(tau_x, sigma_0) )
+    def _get_hopping_x(self):
+        return -1/2*self.t*np.kron(tau_z, sigma_0)       
+        
