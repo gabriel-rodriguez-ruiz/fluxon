@@ -8,15 +8,11 @@ import numpy as np
 from pauli_matrices import tau_x, sigma_x, tau_z, sigma_0, sigma_y
 from hamiltonian import Hamiltonian, PeriodicHamiltonianInY
 
-class TrivialSuperconductor(Hamiltonian):
+class LocalSWaveSuperconductivity():
     r"""Trivial superconductor with local s-wave pairing symmetry.
     
     Parameters
     ----------
-    L_x : int
-        Number of sites in x-direction (horizontal).
-    L_y : int
-        Number of sites in y-direction (vertical).
     t : float
         Hopping amplitude in x and y directions. Positive.
     mu : float
@@ -30,47 +26,47 @@ class TrivialSuperconductor(Hamiltonian):
                         c^\dagger_{n,m,\downarrow},
                         -c^\dagger_{n,m,\uparrow})^T
        
-       H = \frac{1}{2} \sum_n^{L_x} \sum_m^{L_y} \vec{c}^\dagger_{n,m} \left(-\mu 
+       H = \frac{1}{2} \sum_n^{L_x} \sum_m^{L_y} \vec{c}^\dagger_{n,m} 
+       \left(-\mu 
           \tau_z\sigma_0 +\Delta_s\tau_x\sigma_0 \right) \vec{c}_{n,m}
        + \frac{1}{2}
-       \sum_n^{L_x-1}\sum_m^{L_y}\left[\mathbf{c}^\dagger_{n,m}\left(-t\tau_z\sigma_0 \right)\mathbf{c}_{n+1,m}
+       \sum_n^{L_x-1}\sum_m^{L_y}\left[\mathbf{c}^\dagger_{n,m}\left(
+           -t\tau_z\sigma_0 \right)\mathbf{c}_{n+1,m}
        + H.c.\right]
        + \frac{1}{2}
-       \sum_n^{L_x}\sum_m^{L_y-1}\left[\mathbf{c}^\dagger_{n,m}\left(-t\tau_z\sigma_0 \right)\mathbf{c}_{n,m+1}
+       \sum_n^{L_x}\sum_m^{L_y-1}\left[\mathbf{c}^\dagger_{n,m}
+       \left(-t\tau_z\sigma_0 \right)\mathbf{c}_{n,m+1}
        + H.c.\right]
     """
-    def __init__(self, L_x:int, L_y:int, t:float, mu:float, Delta_s:float):
-        self.t = t
-        self.mu = mu
-        self.Delta_s = Delta_s
-        super().__init__(L_x, L_y, self._get_onsite(), self._get_hopping_x(),
-                         self._get_hopping_y())
-    def _get_onsite(self):
-        return 1/2*((-self.mu)*np.kron(tau_z, sigma_0) + self.Delta_s*np.kron(tau_x, sigma_0) )
-    def _get_hopping_x(self):
-        return -1/2*self.t*np.kron(tau_z, sigma_0)
-    def _get_hopping_y(self):
-        return -1/2*self.t*np.kron(tau_z, sigma_0)
-            
-class TrivialSuperconductorPeriodicInY(PeriodicHamiltonianInY):
-    def __init__(self, L_x:int, L_y:int, t:float, mu:float, Delta_s:float):
-        self.t = t
-        self.mu = mu
-        self.Delta_s = Delta_s
-        super().__init__(L_x, L_y, self._get_onsite(), self._get_hopping_x(),
-                         self._get_hopping_y())
+    def __init__(self, t:float, mu:float, Delta_s:float):
         self.t = t
         self.mu = mu
         self.Delta_s = Delta_s
     def _get_onsite(self):
-        return 1/2*((-self.mu)*np.kron(tau_z, sigma_0) + self.Delta_s*np.kron(tau_x, sigma_0) )
+        return 1/2*((-self.mu)*np.kron(tau_z, sigma_0)\
+                    + self.Delta_s*np.kron(tau_x, sigma_0) )
     def _get_hopping_x(self):
         return -1/2*self.t*np.kron(tau_z, sigma_0)
     def _get_hopping_y(self):
         return -1/2*self.t*np.kron(tau_z, sigma_0)
-            
-class TrivialSuperconductorKY(Hamiltonian):
-    r"""
+
+class TrivialSuperconductor(LocalSWaveSuperconductivity, Hamiltonian):
+    def __init__(self, L_x:int, L_y: int, t:float, mu:float, Delta_s:float):
+        LocalSWaveSuperconductivity.__init__(self, t, mu, Delta_s)
+        Hamiltonian.__init__(self, L_x, L_y, self._get_onsite(), 
+                             self._get_hopping_x(),
+                            self._get_hopping_y())
+
+class TrivialSuperconductorPeriodicInY(LocalSWaveSuperconductivity,
+                                       PeriodicHamiltonianInY):
+    def __init__(self, L_x:int, L_y:int, t:float, mu:float, Delta_s:float):
+        LocalSWaveSuperconductivity.__init__(self, t, mu, Delta_s)
+        PeriodicHamiltonianInY.__init__(self, L_x, L_y, self._get_onsite(), 
+                                        self._get_hopping_x(),
+                                        self._get_hopping_y())
+
+class TrivialSuperconductorKY(LocalSWaveSuperconductivity, Hamiltonian):
+    r"""Trivial superconductor for a given k in the y direction.
     .. math::
 
         H_{A1us} = \frac{1}{2}\sum_k H_{A1us,k}
@@ -85,11 +81,9 @@ class TrivialSuperconductorKY(Hamiltonian):
         \xi_k = -2tcos(k) - \mu
     """
     def __init__(self,  k:float, L_x:int, t:float, mu:float, Delta_s:float):
-        self.t = t
-        self.mu = mu
-        self.Delta_s = Delta_s
         self.k = k
-        super().__init__(L_x, 1, self._get_onsite(), self._get_hopping_x(),
+        LocalSWaveSuperconductivity.__init__(self, t, mu, Delta_s)
+        Hamiltonian.__init__(self, L_x, 1, self._get_onsite(), self._get_hopping_x(),
                          np.zeros((4, 4)))
     def _get_onsite(self):
         chi_k = -2*self.t*np.cos(self.k)-self.mu
