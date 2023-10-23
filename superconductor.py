@@ -6,11 +6,10 @@ Created on Sun Oct 22 08:46:18 2023
 """
 import numpy as np
 from pauli_matrices import tau_x, sigma_x, tau_z, sigma_0, sigma_y
-from hamiltonian import Hamiltonian
+from hamiltonian import Hamiltonian, PeriodicHamiltonianInY
 
 class TrivialSuperconductor(Hamiltonian):
-    r"""
-    Trivial superconductor with local s-wave pairing symmetry.
+    r"""Trivial superconductor with local s-wave pairing symmetry.
     
     Parameters
     ----------
@@ -48,12 +47,23 @@ class TrivialSuperconductor(Hamiltonian):
         self.t = t
         self.mu = mu
         self.Delta_s = Delta_s
-        onsite = 1/2*(-mu)*np.kron(tau_z, sigma_0)
-        hopping_x = 1/2*(-t*np.kron(tau_z, sigma_0) \
-                              - 1j/2*Delta_s*np.kron(tau_x, sigma_x))
-        hopping_y = 1/2*(-t*np.kron(tau_z, sigma_0) \
-                              - 1j/2*Delta_s*np.kron(tau_x, sigma_y))
-        super().__init__(L_x, L_y, onsite, hopping_x, hopping_y)
-
-
+        super().__init__(L_x, L_y, self._get_onsite(), self._get_hopping_x(),
+                         self._get_hopping_y())
+    def _get_onsite(self):
+        return 1/2*(-self.mu)*np.kron(tau_z, sigma_0)
+    def _get_hopping_x(self):
+        return 1/2*(-self.t*np.kron(tau_z, sigma_0) \
+                - 1j/2*self.Delta_s*np.kron(tau_x, sigma_x))
+    def _get_hopping_y(self):
+        return 1/2*(-self.t*np.kron(tau_z, sigma_0) \
+                - 1j/2*self.Delta_s*np.kron(tau_x, sigma_y))
+            
+class TrivialSuperconductorPeriodicInY(PeriodicHamiltonianInY,
+                                       TrivialSuperconductor):
+    def __init__(self, L_x:int, L_y:int, t:float, mu:float, Delta_s:float):
+        self.t = t
+        self.mu = mu
+        self.Delta_s = Delta_s
+        super().__init__(L_x, L_y, self._get_onsite(), self._get_hopping_x(),
+                         self._get_hopping_y())
     

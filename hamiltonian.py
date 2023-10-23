@@ -80,14 +80,23 @@ class Hamiltonian(object):
         if (i>self.L_x or j>self.L_y):
             raise Exception("Site index should not be greater than \
                             samplesize.")
+        if (i<1 or j<1):
+            raise Exception("Site index should be a positive integer")
         return alpha + 4*( self.L_y*(i-1) + j-1 )
     def _get_matrix(self):
-        """
-        Matrix of the BdG-Hamiltonian.
+        r"""
+        Matrix of the BdG-Hamiltonian.        
+        
         Returns
         -------
         M : ndarray
             Matrix of the BdG-Hamiltonian.
+        .. math ::
+            \text{matrix space}
+            
+            (c_{11} &... c_{1L_y})
+                             
+            (c_{L_x1} &... c_{L_xL_y})
         """
         L_x = self.L_x
         L_y = self.L_y
@@ -131,5 +140,22 @@ class Hamiltonian(object):
 
         """
         C = np.kron(tau_y, sigma_y)     #charge conjugation operator
-        M = np.kron(np.eye(4), C)      
-        return np.all(np.linalg.inv(M) @ self.matrix @ M == -self.matrix.conj())
+        M = np.kron(np.eye(self.L_x*self.L_y), C)      
+        return np.all(np.linalg.inv(M) @ self.matrix @ M
+                      == -self.matrix.conj())
+
+class PeriodicHamiltonianInY(Hamiltonian):
+    def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):
+        super().__init__(L_x, L_y, onsite, hopping_x, hopping_y)
+        self.matrix = super()._get_matrix() + self._get_matrix_periodic_in_y()
+    def _get_matrix_periodic_in_y(self):     #self is the Hamiltonian class
+        """The part of the tight binding matrix which connects the first
+        and last site in the y direction."""
+        M = np.zeros((4*self.L_x*self.L_y, 4*self.L_x*self.L_y), dtype=complex)
+        #hopping_y
+        for i in range(1, self.L_x+1):
+            for alpha in range(4):
+                for beta in range(4):
+                    M[self._index(i, self.L_y, alpha),
+                      self._index(i, 1, beta)] = self.hopping_y[alpha, beta]
+        return M + M.conj().T
