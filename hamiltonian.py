@@ -6,6 +6,7 @@ Created on Sat Oct 21 11:37:41 2023
 """
 import numpy as np
 from pauli_matrices import tau_y, sigma_y
+import scipy
 
 class Hamiltonian(object):
     r"""A class for 2D Bogoliubov-de-Gennes Hamiltonians.
@@ -47,7 +48,7 @@ class Hamiltonian(object):
         self.onsite = onsite
         self.hopping_x = hopping_x
         self.hopping_y = hopping_y
-        self.matrix = self._get_matrix()
+        self.matrix = self._get_matrix().toarray()
     def _index(self, i:int , j:int, alpha:int):    
         #protected method, accesible from derived class but not from object
         r"""Return the index of basis vector given the site (i,j)
@@ -100,7 +101,7 @@ class Hamiltonian(object):
         """
         L_x = self.L_x
         L_y = self.L_y
-        M = np.zeros((4*L_x*L_y, 4*L_x*L_y), dtype=complex)
+        M = scipy.sparse.lil_matrix((4*L_x*L_y, 4*L_x*L_y), dtype=complex)
         #onsite
         for i in range(1, L_x+1):    
             for j in range(1, L_y+1):
@@ -143,19 +144,34 @@ class Hamiltonian(object):
         M = np.kron(np.eye(self.L_x*self.L_y), C)      
         return np.all(np.linalg.inv(M) @ self.matrix @ M
                       == -self.matrix.conj())
-
-class PeriodicHamiltonianInY(Hamiltonian):
-    def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):
-        super().__init__(L_x, L_y, onsite, hopping_x, hopping_y)
-        self.matrix = super()._get_matrix() + self._get_matrix_periodic_in_y()
     def _get_matrix_periodic_in_y(self):     #self is the Hamiltonian class
         """The part of the tight binding matrix which connects the first
         and last site in the y direction."""
-        M = np.zeros((4*self.L_x*self.L_y, 4*self.L_x*self.L_y), dtype=complex)
+        M = scipy.sparse.lil_matrix((4*self.L_x*self.L_y,
+                                     4*self.L_x*self.L_y),
+                                    dtype=complex)
         #hopping_y
         for i in range(1, self.L_x+1):
             for alpha in range(4):
                 for beta in range(4):
                     M[self._index(i, self.L_y, alpha),
-                      self._index(i, 1, beta)] = self.hopping_y[alpha, beta]
+                      self._index(i, 1, beta)] =\
+                        self.hopping_y[alpha, beta]
         return M + M.conj().T
+        
+class PeriodicHamiltonianInY(Hamiltonian):
+    def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):
+        super().__init__(L_x, L_y, onsite, hopping_x, hopping_y)
+        self.matrix = super()._get_matrix().toarray()\
+                        + super()._get_matrix_periodic_in_y().toarray()
+
+class SparseHamiltonian(Hamiltonian):
+    def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):
+        super().__init__(L_x, L_y, onsite, hopping_x, hopping_y)
+        self.matrix = super()._get_matrix()
+        
+class SparsePeriodicHamiltonianInY(SparseHamiltonian):
+    def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):
+        super().__init__(L_x, L_y, onsite, hopping_x, hopping_y)
+        self.matrix = super()._get_matrix() +\
+                        super()._get_matrix_periodic_in_y()
