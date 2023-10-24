@@ -167,8 +167,12 @@ class PeriodicHamiltonianInY(Hamiltonian):
 
 class SparseHamiltonian(Hamiltonian):
     def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):
-        super().__init__(L_x, L_y, onsite, hopping_x, hopping_y)
-        self.matrix = super()._get_matrix()
+        self.L_x = L_x
+        self.L_y = L_y
+        self.onsite = onsite
+        self.hopping_x = hopping_x
+        self.hopping_y = hopping_y
+        self.matrix = self._get_matrix()
         
 class SparsePeriodicHamiltonianInY(SparseHamiltonian):
     def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):
