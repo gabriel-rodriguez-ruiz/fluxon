@@ -12,11 +12,11 @@ from superconductor import A1usSparseSuperconductor,\
                             A1usSuperconductorKY
 from functions import get_components
 
-L_x = 100
-L_y = 100
+L_x = 200
+L_y = 200
 t = 1
-Delta_s = t/2
-Delta_p = t
+Delta_s = t/20
+Delta_p = t/10
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
 k_values = np.linspace(0, np.pi, L_y)
