@@ -84,6 +84,7 @@ class TrivialSuperconductorKY(LocalSWaveSuperconductivity, Hamiltonian):
     """
     def __init__(self,  k:float, L_x:int, t:float, mu:float, Delta_s:float):
         self.k = k
+        self.L_y = 1
         LocalSWaveSuperconductivity.__init__(self, t, mu, Delta_s)
         Hamiltonian.__init__(self, L_x, 1, self._get_onsite(),
                              self._get_hopping_x(), np.zeros((4, 4)))

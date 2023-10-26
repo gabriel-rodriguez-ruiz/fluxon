@@ -7,8 +7,7 @@ Created on Tue Oct 24 16:14:13 2023
 """
 import numpy as np
 from superconductor import TrivialSparseSuperconductor, \
-                            A1usSparseSuperconductor
-                            
+                            A1usSparseSuperconductor                            
 from junction import Junction, PeriodicJunction
 from phase_functions import phase_soliton_antisoliton_S_around_zero
 import scipy
@@ -18,14 +17,14 @@ import matplotlib.pyplot as plt
 
 L_x = 300
 L_y = 300
-L = 10     #L_y//2
+L = 140     #L_y//2
 t = 1
+t_J = t/10
 Delta_s_Trivial = t/40
 Delta_p_A1us = t/10
-Delta_s_A1us = t/20
+Delta_s_A1us = t/40
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
-t_J = t/2
 phi_external = 0
 phi_eq = 0.22*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
@@ -50,7 +49,7 @@ for i in index:
     destruction_up, destruction_down, creation_down, creation_up = get_components(eigenvectors_sparse[:,i], J.L_x, J.L_y)
     probability_density.append((np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)/(np.linalg.norm(np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)))
     
-index = 0
+index = 2
 fig, ax = plt.subplots()
 image = ax.imshow(probability_density[index], cmap="Blues", origin="lower") #I have made the transpose and changed the origin to have xy axes as usually
 plt.colorbar(image)
