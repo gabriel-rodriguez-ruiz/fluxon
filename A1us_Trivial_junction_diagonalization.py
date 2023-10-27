@@ -15,12 +15,12 @@ from functions import get_components
 import matplotlib.pyplot as plt
 
 
-L_x = 300
-L_y = 300
-L = 140     #L_y//2
+L_x = 200
+L_y = 100
+L = 4     #L_y//2
 t = 1
-t_J = t/10
-Delta_s_Trivial = t/40
+t_J = t/2
+Delta_s_Trivial = t/10
 Delta_p_A1us = t/10
 Delta_s_A1us = t/40
 mu = -2*t

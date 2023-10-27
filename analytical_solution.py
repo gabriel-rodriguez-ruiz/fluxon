@@ -48,7 +48,7 @@ def Kappa(m_0, Delta, L):
     The wavevector k solving:
         (m_0/Delta)**2 - k**2 = (m_0/Delta)**2 * np.exp(-2*k*L)
     """
-    return root(trascendental_equation, 1, args=(m_0, Delta, L)).x
+    return root(trascendental_equation, m_0/Delta, args=(m_0, Delta, L)).x
 
 def psi_1_prime(y, kappa, m_0, Delta, L):
     alpha = kappa*Delta/m_0

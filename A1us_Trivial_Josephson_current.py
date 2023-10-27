@@ -13,16 +13,14 @@ from junction import Junction, PeriodicJunction
 import scipy
 import matplotlib.pyplot as plt
 
-L_x = 300
-L_y = 300
+L_x = 100
 t = 1
-Delta_s_Trivial = t/40
+Delta_s_Trivial = t/10
 Delta_p_A1us = t/10
 Delta_s_A1us = t/40
 mu = -2*t
-n = 12      #number of eigenvalues in sparse diagonalization
-t_J = t/10
-phi_values = np.linspace(0, 2*np.pi, 50)
+t_J = t/2
+phi_values = np.linspace(0, 2*np.pi, 20)
 k_values = np.linspace(0, np.pi, 50)
 
 eigenvalues = []

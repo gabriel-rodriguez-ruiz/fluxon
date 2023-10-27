@@ -6,11 +6,11 @@ from superconductor import TrivialSparseSuperconductor, \
                             A1usSparseSuperconductor                            
 from junction import PeriodicJunction
 
-L_x = 300
-L_y = 300
+L_x = 200
+L_y = 100
 t = 1
-t_J = t/5
-Delta_s_Trivial = t/20
+t_J = t/2
+Delta_s_Trivial = t/10
 Delta_p_A1us = t/10
 Delta_s_A1us = t/40
 mu = -2*t
@@ -18,7 +18,7 @@ n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
 phi_eq = 0.22*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
-L_values = np.linspace(2, 3, 1, dtype=int)
+L_values = np.linspace(2, 10, 5, dtype=int)
 
 eigenvalues = []
 
@@ -56,8 +56,11 @@ plt.rc('legend', fontsize=18) #fontsize of the legend
 
 fig, ax = plt.subplots()
 # I remove the L=100 distance and plot only zero-energy states
-ax.plot(L_values, E_numerical[n//2], "o", label="Numerical edge state")
-ax.plot(L_values, E_numerical[n//2+1], "o", label="Numerical bound state")
+ax.plot(L_values, E_numerical[n//2], "o", label="Numerical zero state")
+ax.plot(L_values, E_numerical[n//2+1], "*")
+ax.plot(L_values, E_numerical[n//2+2], ".")
+ax.plot(L_values, E_numerical[n//2+3], ".")
+ax.plot(L_values, E_numerical[n//2+4], ".")
 
 ax.set_xlabel(r"$L$")
 plt.yscale('log')
@@ -77,13 +80,13 @@ for L_value in L_values:
     E.append(Energy[0])
 
 E_analytical = np.array([E[i] for i in range(len(L_values))])
-ax.plot(L_values, E_analytical, "ok", label="Analytical")
+# ax.plot(L_values, E_analytical, "ok", label="Analytical")
 
-m_numerical, b_numerical = np.polyfit(L_values, np.log(E_numerical[n//2+1]), 1)
-m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
+# m_numerical, b_numerical = np.polyfit(L_values, np.log(E_numerical[n//2+1]), 1)
+# m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
 
-ax.plot(L_values, np.exp(m_numerical*L_values + b_numerical), label=f"{m_numerical:.3}L{b_numerical:.3}")
-ax.plot(L_values, np.exp(m_analytical*L_values + b_analytical), label=f"{m_analytical:.3}L{b_analytical:.3}")
+# ax.plot(L_values, np.exp(m_numerical*L_values + b_numerical), label=f"{m_numerical:.3}L{b_numerical:.3}")
+# ax.plot(L_values, np.exp(m_analytical*L_values + b_analytical), label=f"{m_analytical:.3}L{b_analytical:.3}")
 ax.legend()
 plt.title(r"$\phi_{eq}=$"+f"{phi_eq:.2}, Delta={Delta_p_A1us}")
 plt.tight_layout()
