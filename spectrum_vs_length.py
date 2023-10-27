@@ -9,8 +9,8 @@ from junction import PeriodicJunction
 L_x = 300
 L_y = 300
 t = 1
-t_J = t/40
-Delta_s_Trivial = t/40
+t_J = t/5
+Delta_s_Trivial = t/20
 Delta_p_A1us = t/10
 Delta_s_A1us = t/40
 mu = -2*t
@@ -18,7 +18,7 @@ n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
 phi_eq = 0.22*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
-L_values = np.linspace(2, 10, 8, dtype=int)
+L_values = np.linspace(2, 3, 1, dtype=int)
 
 eigenvalues = []
 
@@ -65,7 +65,7 @@ ax.set_ylabel("E")
 
 from analytical_solution import Kappa
 
-m_0 = t_J**2/Delta_p_A1us
+m_0 = t_J**2/Delta_s_Trivial
 
 def positive_energy(L, m_0):
     kappa_value = Kappa(m_0=m_0, Delta=Delta_p_A1us, L=L_value)
