@@ -9,7 +9,7 @@ from junction import PeriodicJunction
 L_x = 200
 L_y = 100
 t = 1
-t_J = t/2
+t_J = t/4
 Delta_s_Trivial = t/10
 Delta_p_A1us = t/10
 Delta_s_A1us = t/40

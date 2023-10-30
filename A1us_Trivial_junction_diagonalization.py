@@ -15,11 +15,11 @@ from functions import get_components
 import matplotlib.pyplot as plt
 
 
-L_x = 200
-L_y = 100
-L = 4     #L_y//2
+L_x = 300
+L_y = 300
+L = 140     #L_y//2
 t = 1
-t_J = t/2
+t_J = t/10
 Delta_s_Trivial = t/10
 Delta_p_A1us = t/10
 Delta_s_A1us = t/40
@@ -59,7 +59,7 @@ ax.set_title("Probability density")
 ax.text(0,0, rf'$index={index}$')
 plt.tight_layout()
 
-probability_density_right = probability_density[index][:, S_A1us.L_x]/np.linalg.norm(probability_density[index][:, S_A1us.L_x])  #The y-axis is inverted
+probability_density_right = probability_density[index][:, S_A1us.L_x-1]/np.linalg.norm(probability_density[index][:, S_A1us.L_x-1])  #The y-axis is inverted
 
 fig, ax = plt.subplots()
 ax.plot(y, probability_density_right, "o")
