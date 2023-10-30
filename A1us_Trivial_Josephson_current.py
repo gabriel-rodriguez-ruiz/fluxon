@@ -13,15 +13,15 @@ from junction import Junction, PeriodicJunction
 import scipy
 import matplotlib.pyplot as plt
 
-L_x = 100
+L_x = 200
 t = 1
-Delta_s_Trivial = t/10
-Delta_p_A1us = t/10
-Delta_s_A1us = t/40
+Delta_s_Trivial = t/2
+Delta_p_A1us = t/2      #topologic if Delta_p>Delta_s
+Delta_s_A1us = t/4
 mu = -2*t
-t_J = t/2
+t_J = t/10
 phi_values = np.linspace(0, 2*np.pi, 20)
-k_values = np.linspace(0, np.pi, 50)
+k_values = np.linspace(0, np.pi, 20)
 
 eigenvalues = []
 for k in k_values:

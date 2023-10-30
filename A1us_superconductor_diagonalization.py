@@ -12,11 +12,11 @@ from superconductor import A1usSparseSuperconductor,\
                             A1usSuperconductorKY
 from functions import get_components
 
-L_x = 20
-L_y = 200
+L_x = 200
+L_y = 100
 t = 1
-Delta_s = t/2
-Delta_p = 0
+Delta_s = t/10
+Delta_p = t/5
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
 k_values = np.linspace(0, np.pi, L_y)
@@ -48,7 +48,7 @@ for i in index:
     destruction_up, destruction_down, creation_down, creation_up = get_components(eigenvectors_sparse[:,i], L_x, L_y)
     # probability_density.append((np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)/(np.linalg.norm(np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)))
     probability_density.append(np.abs(destruction_up))
-index = 11
+index = 0
 fig, ax = plt.subplots()
 image = ax.imshow(probability_density[index], cmap="Blues", origin="lower") #I have made the transpose and changed the origin to have xy axes as usually
 plt.colorbar(image)

@@ -158,12 +158,33 @@ class Hamiltonian(object):
                       self._index(i, 1, beta)] =\
                         self.hopping_y[alpha, beta]
         return M + M.conj().T
+    def _get_matrix_periodic_in_x(self):     #self is the Hamiltonian class
+        """The part of the tight binding matrix which connects the first
+        and last site in the x direction."""
+        M = scipy.sparse.lil_matrix((4*self.L_x*self.L_y,
+                                     4*self.L_x*self.L_y),
+                                    dtype=complex)
+        #hopping_y
+        for j in range(1, self.L_y+1):
+            for alpha in range(4):
+                for beta in range(4):
+                    M[self._index(self.L_x, j, alpha),
+                      self._index(1, j, beta)] =\
+                        self.hopping_x[alpha, beta]
+        return M + M.conj().T
         
 class PeriodicHamiltonianInY(Hamiltonian):
     def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):
         super().__init__(L_x, L_y, onsite, hopping_x, hopping_y)
         self.matrix = super()._get_matrix().toarray()\
                         + super()._get_matrix_periodic_in_y().toarray()
+
+class PeriodicHamiltonianInYandX(Hamiltonian):
+    def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):
+        super().__init__(L_x, L_y, onsite, hopping_x, hopping_y)
+        self.matrix = super()._get_matrix().toarray()\
+                        + super()._get_matrix_periodic_in_y().toarray()\
+                        + super()._get_matrix_periodic_in_x().toarray()
 
 class SparseHamiltonian(Hamiltonian):
     def __init__(self, L_x:int, L_y:int, onsite, hopping_x, hopping_y):

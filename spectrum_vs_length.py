@@ -9,16 +9,16 @@ from junction import PeriodicJunction
 L_x = 200
 L_y = 100
 t = 1
-t_J = t/4
-Delta_s_Trivial = t/10
-Delta_p_A1us = t/10
-Delta_s_A1us = t/40
+t_J = t/5
+Delta_s_Trivial = t/5
+Delta_p_A1us = t/5
+Delta_s_A1us = t/10
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
-phi_eq = 0.22*np.pi    #0.14*2*np.pi
+phi_eq = 0.053*2*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
-L_values = np.linspace(2, 10, 5, dtype=int)
+L_values = np.linspace(30, 48, 5, dtype=int)
 
 eigenvalues = []
 
@@ -56,7 +56,7 @@ plt.rc('legend', fontsize=18) #fontsize of the legend
 
 fig, ax = plt.subplots()
 # I remove the L=100 distance and plot only zero-energy states
-ax.plot(L_values, E_numerical[n//2], "o", label="Numerical zero state")
+# ax.plot(L_values, E_numerical[n//2], "o", label="Numerical zero state")
 ax.plot(L_values, E_numerical[n//2+1], "*")
 ax.plot(L_values, E_numerical[n//2+2], ".")
 ax.plot(L_values, E_numerical[n//2+3], ".")
@@ -72,21 +72,34 @@ m_0 = t_J**2/Delta_s_Trivial
 
 def positive_energy(L, m_0):
     kappa_value = Kappa(m_0=m_0, Delta=Delta_p_A1us, L=L_value)
+    # kappa_value = m_0
     return m_0*np.exp(-kappa_value*L)
 
 E = []
 for L_value in L_values:
     Energy = positive_energy(L=L_value, m_0=m_0)
     E.append(Energy[0])
+    # E.append(Energy)
 
 E_analytical = np.array([E[i] for i in range(len(L_values))])
 # ax.plot(L_values, E_analytical, "ok", label="Analytical")
+# ax.plot(0, m_0, "ok", label="Analytical")
 
-# m_numerical, b_numerical = np.polyfit(L_values, np.log(E_numerical[n//2+1]), 1)
+E_numerics = np.array([E_numerical[n//2+3][0],
+            E_numerical[n//2+2][1],
+            E_numerical[n//2+1][2],
+            E_numerical[n//2+1][3],
+            E_numerical[n//2+1][4]])
+
+# m_numerical, b_numerical = np.polyfit(L_values, np.log(E_numerics), 1)
 # m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
+# m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
+# ax.plot(L_values, E_numerics)
 
-# ax.plot(L_values, np.exp(m_numerical*L_values + b_numerical), label=f"{m_numerical:.3}L{b_numerical:.3}")
-# ax.plot(L_values, np.exp(m_analytical*L_values + b_analytical), label=f"{m_analytical:.3}L{b_analytical:.3}")
+# ax.plot(L_values, np.exp(m_analytical*L_values) + np.exp(b_analytical), label=f"{m_analytical:.3}L{b_analytical:.3}")
+Kappa_semi_analytical = np.sqrt((m_0**2-E_numerics**2)/Delta_p_A1us**2)
+ax.plot(L_values, m_0*np.exp(-m_0/Delta_p_A1us*L_values))
+
 ax.legend()
 plt.title(r"$\phi_{eq}=$"+f"{phi_eq:.2}, Delta={Delta_p_A1us}")
 plt.tight_layout()
