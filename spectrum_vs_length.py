@@ -6,7 +6,6 @@ from superconductor import TrivialSparseSuperconductor, \
                             A1usSparseSuperconductor                            
 from junction import PeriodicJunction
 
-<<<<<<< HEAD
 L_x = 300
 L_y = 300
 t = 1
@@ -20,21 +19,6 @@ phi_external = 0.
 phi_eq = 0.12*2*np.pi   #0.053*2*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
 L_values = np.linspace(10, 50, 5, dtype=int)
-=======
-L_x = 100
-L_y = 300
-t = 1
-t_J = t/5
-Delta_s_Trivial = t/2
-Delta_p_A1us = t/2
-Delta_s_A1us = t/4
-mu = -2*t
-n = 12      #number of eigenvalues in sparse diagonalization
-phi_external = 0.
-phi_eq = 0.05*2*np.pi    #0.14*2*np.pi
-y = np.arange(1, L_y+1)
-L_values = np.linspace(80, 120, 5, dtype=int)
->>>>>>> origin
 
 eigenvalues = []
 
