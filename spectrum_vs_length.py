@@ -6,6 +6,7 @@ from superconductor import TrivialSparseSuperconductor, \
                             A1usSparseSuperconductor                            
 from junction import PeriodicJunction
 
+<<<<<<< HEAD
 L_x = 300
 L_y = 300
 t = 1
@@ -19,6 +20,21 @@ phi_external = 0.
 phi_eq = 0.12*2*np.pi   #0.053*2*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
 L_values = np.linspace(10, 50, 5, dtype=int)
+=======
+L_x = 100
+L_y = 300
+t = 1
+t_J = t/5
+Delta_s_Trivial = t/2
+Delta_p_A1us = t/2
+Delta_s_A1us = t/4
+mu = -2*t
+n = 12      #number of eigenvalues in sparse diagonalization
+phi_external = 0.
+phi_eq = 0.05*2*np.pi    #0.14*2*np.pi
+y = np.arange(1, L_y+1)
+L_values = np.linspace(80, 120, 5, dtype=int)
+>>>>>>> origin
 
 eigenvalues = []
 
@@ -91,7 +107,7 @@ E_numerics = np.array([E_numerical[n//2+3][0],
             E_numerical[n//2+1][3],
             E_numerical[n//2+1][4]])
 
-m_numerical, b_numerical = np.polyfit(L_values, np.log(E_numerics), 1)
+m_numerical, b_numerical = np.polyfit(L_values, np.log(E_numerical[n//2+1]), 1)
 # m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
 # m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
 # ax.plot(L_values, E_numerics)
@@ -99,7 +115,11 @@ m_0_effective = np.exp(b_numerical)
 v_effective = - m_0_effective/m_numerical
 ax.plot(L_values, np.exp(b_numerical)*np.exp(m_numerical*L_values), label=f"{m_numerical:.3}L{b_numerical:.3}")
 Kappa_semi_analytical = np.sqrt((m_0**2-E_numerics**2)/Delta_p_A1us**2)
-# ax.plot(L_values, m_0*np.exp(-m_0/Delta_p_A1us*L_values))
+ax.plot(L_values, m_0*np.exp(-m_0/Delta_p_A1us*L_values))
+ax.plot(L_values, np.exp(b_numerical)*np.exp(m_numerical*L_values))
+
+m_0_numerical = np.exp(b_numerical)
+v_numerical =  -m_0_numerical/m_numerical
 ax.legend()
 plt.title(r"$\phi_{eq}=$"+f"{phi_eq:.2}, Delta={Delta_p_A1us}")
 plt.tight_layout()

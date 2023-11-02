@@ -20,8 +20,13 @@ Delta_p_A1us = t/5      #topologic if Delta_p>Delta_s
 Delta_s_A1us = t/20
 mu = -2*t
 t_J = t/5
+<<<<<<< HEAD
 phi_values = np.linspace(0, 2*np.pi, 50)
 k_values = np.linspace(0, np.pi, 50)
+=======
+phi_values = np.linspace(0, 2*np.pi, 30)
+k_values = np.linspace(0, np.pi, 30)
+>>>>>>> origin
 
 eigenvalues = []
 for k in k_values:

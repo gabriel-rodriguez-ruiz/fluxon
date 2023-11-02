@@ -15,6 +15,7 @@ from functions import get_components
 import matplotlib.pyplot as plt
 
 
+<<<<<<< HEAD
 L_x = 300
 L_y = 300
 L = 100     #L_y//2
