@@ -18,7 +18,7 @@ n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
 phi_eq = 0.12*2*np.pi   #0.053*2*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
-L_values = np.linspace(10, 50, 5, dtype=int)
+L_values = np.linspace(1, 10, 10, dtype=int)
 
 eigenvalues = []
 
@@ -57,10 +57,11 @@ plt.rc('legend', fontsize=18) #fontsize of the legend
 fig, ax = plt.subplots()
 # I remove the L=100 distance and plot only zero-energy states
 # ax.plot(L_values, E_numerical[n//2], "o", label="Numerical zero state")
-ax.plot(L_values, E_numerical[n//2+1], "*")
-ax.plot(L_values, E_numerical[n//2+2], ".")
-ax.plot(L_values, E_numerical[n//2+3], ".")
-ax.plot(L_values, E_numerical[n//2+4], ".")
+# ax.plot(L_values, E_numerical[n//2+1], "*")
+# ax.plot(L_values, E_numerical[n//2+2], ".")
+# ax.plot(L_values, E_numerical[n//2+3], ".")
+# ax.plot(L_values, E_numerical[n//2+4], ".")
+# ax.plot(L_values, E_numerical[n//2+5], ".")
 
 ax.set_xlabel(r"$L$")
 plt.yscale('log')
@@ -85,25 +86,44 @@ E_analytical = np.array([E[i] for i in range(len(L_values))])
 # ax.plot(L_values, E_analytical, "ok", label="Analytical")
 # ax.plot(0, m_0, "ok", label="Analytical")
 
-E_numerics = np.array([E_numerical[n//2+3][0],
-            E_numerical[n//2+2][1],
-            E_numerical[n//2+1][2],
-            E_numerical[n//2+1][3],
-            E_numerical[n//2+1][4]])
+# E_numerics = np.array([#E_numerical[n//2+3][0],
+#             E_numerical[n//2+1][1],
+#             E_numerical[n//2+1][2],
+#             E_numerical[n//2+1][3],
+#             E_numerical[n//2+1][4],
+#             E_numerical[n//2+1][5],
+#             E_numerical[n//2+1][6],
+#             E_numerical[n//2+1][7],
+#             E_numerical[n//2+1][8],
+#             E_numerical[n//2+1][9]])
 
-m_numerical, b_numerical = np.polyfit(L_values, np.log(E_numerical[n//2+1]), 1)
+E_numerics = np.array([#E_numerical[n//2+3][0],
+            E_numerical[n//2+3][1],
+            E_numerical[n//2+3][2],
+            E_numerical[n//2+3][3],
+            E_numerical[n//2+4][4],
+            E_numerical[n//2+3][5],
+            E_numerical[n//2+3][6],
+            E_numerical[n//2+3][7],
+            E_numerical[n//2+3][8],
+            E_numerical[n//2+3][9]])
+
+ax.plot(L_values[1:], E_numerics, "o")
+m_numerical, b_numerical = np.polyfit(L_values[1:], np.log(E_numerics), 1)
 # m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
 # m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
 # ax.plot(L_values, E_numerics)
 m_0_effective = np.exp(b_numerical)
 v_effective = - m_0_effective/m_numerical
-ax.plot(L_values, np.exp(b_numerical)*np.exp(m_numerical*L_values), label=f"{m_numerical:.3}L{b_numerical:.3}")
+x = np.linspace(2, 10)
+# ax.plot(x, np.exp(b_numerical)*np.exp(m_numerical*x), label=f"{m_numerical:.2}L{b_numerical:.2}")
 Kappa_semi_analytical = np.sqrt((m_0**2-E_numerics**2)/Delta_p_A1us**2)
-ax.plot(L_values, m_0*np.exp(-m_0/Delta_p_A1us*L_values))
-ax.plot(L_values, np.exp(b_numerical)*np.exp(m_numerical*L_values))
-
+# ax.plot(L_values, m_0*np.exp(-m_0/Delta_p_A1us*L_values))
+ax.plot(x, np.exp(-0.042*x-5.5))
 m_0_numerical = np.exp(b_numerical)
 v_numerical =  -m_0_numerical/m_numerical
-ax.legend()
-plt.title(r"$\phi_{eq}=$"+f"{phi_eq:.2}, Delta={Delta_p_A1us}")
+ax.set_xticks(np.arange(2,11, 2, dtype="int"))
+plt.yticks([3e-3, 3.5e-3, 4e-3])
+# plt.title(r"$\phi_{eq}=$"+f"{phi_eq:.2}, Delta={Delta_p_A1us}")
 plt.tight_layout()
+plt.savefig('demo.pdf', transparent=True)
