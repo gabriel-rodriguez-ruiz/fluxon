@@ -18,7 +18,7 @@ n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
 phi_eq = 0.12*2*np.pi   #0.053*2*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
-L_values = np.linspace(10, 100, 10, dtype=int)
+L_values = np.linspace(1, 10, 10, dtype=int)
 
 eigenvalues = []
 
