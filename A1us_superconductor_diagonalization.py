@@ -15,7 +15,7 @@ from functions import get_components
 L_x = 200
 L_y = 100
 t = 1
-Delta_s = t/10
+Delta_s = t/20
 Delta_p = t/5
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
