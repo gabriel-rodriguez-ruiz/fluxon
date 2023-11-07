@@ -15,13 +15,13 @@ from functions import get_components
 import matplotlib.pyplot as plt
 
 
-L_x = 200
-L_y = 200
-L = 40     #L_y//2
+L_x = 150
+L_y = 150
+L = 50     #odd
 t = 1
-t_J = t/5
+t_J = t/25
 Delta_p_A1us = t/5
-Delta_s_A1us = t/20
+Delta_s_A1us = 0
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0

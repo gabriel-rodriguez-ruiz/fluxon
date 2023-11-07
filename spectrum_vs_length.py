@@ -6,19 +6,19 @@ from superconductor import TrivialSparseSuperconductor, \
                             A1usSparseSuperconductor                            
 from junction import PeriodicJunction, PeriodicJunctionInXAndY
 
-L_x = 200
-L_y = 100
+L_x = 75#300
+L_y = 150
 t = 1
-t_J = t/5
+t_J = t/25
 Delta_s_Trivial = t/5
 Delta_p_A1us = t/5
-Delta_s_A1us = t/20
+Delta_s_A1us = 0
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
 phi_eq = 0.12*2*np.pi   #0.053*2*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
-L_values = np.linspace(10, 40, 5, dtype=int)
+L_values = np.linspace(1, 10, 10, dtype=int)
 
 eigenvalues = []
 
@@ -58,12 +58,12 @@ plt.rc('legend', fontsize=18) #fontsize of the legend
 
 fig, ax = plt.subplots()
 # I remove the L=100 distance and plot only zero-energy states
-ax.plot(L_values, E_numerical[n//2], "o", label="Numerical zero state")
-ax.plot(L_values, E_numerical[n//2+1], "*")
-ax.plot(L_values, E_numerical[n//2+2], ".")
-ax.plot(L_values, E_numerical[n//2+3], ".")
-ax.plot(L_values, E_numerical[n//2+4], ".")
-ax.plot(L_values, E_numerical[n//2+5], ".")
+# ax.plot(L_values, E_numerical[n//2], "o")
+# ax.plot(L_values, E_numerical[n//2+1], "*")
+# ax.plot(L_values, E_numerical[n//2+2], ".")
+# ax.plot(L_values, E_numerical[n//2+3], ".")
+# ax.plot(L_values, E_numerical[n//2+4], ".")
+# ax.plot(L_values, E_numerical[n//2+5], ".")
 
 ax.set_xlabel(r"$L$")
 plt.yscale('log')
@@ -90,30 +90,25 @@ E_analytical = np.array([E[i] for i in range(len(L_values))])
 # ax.plot(L_values, E_analytical, "ok", label="Analytical")
 # ax.plot(0, m_0, "ok", label="Analytical")
 
-# E_numerics = np.array([#E_numerical[n//2+3][0],
-#             E_numerical[n//2+1][1],
-#             E_numerical[n//2+1][2],
-#             E_numerical[n//2+1][3],
-#             E_numerical[n//2+1][4],
-#             E_numerical[n//2+1][5],
-#             E_numerical[n//2+1][6],
-#             E_numerical[n//2+1][7],
-#             E_numerical[n//2+1][8],
-#             E_numerical[n//2+1][9]])
+E_numerics = np.array([E_numerical[n//2+1][0],
+            E_numerical[n//2+1][1],
+            E_numerical[n//2+1][2],
+            E_numerical[n//2+1][3],
+            E_numerical[n//2+1][4],
+            E_numerical[n//2+1][5],
+            E_numerical[n//2+1][6],
+            E_numerical[n//2+1][7],
+            E_numerical[n//2+1][8],
+            E_numerical[n//2+1][9]])
 
-E_numerics = np.array([E_numerical[n//2+3][0],
-            E_numerical[n//2+3][1],
-            E_numerical[n//2+3][2],
-            E_numerical[n//2+3][3],
-            E_numerical[n//2+4][4]])
 
-# ax.plot(L_values, E_analytical, "o")
 m_numerical, b_numerical = np.polyfit(L_values, np.log(E_numerics), 1)
-# m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
-# m_analytical, b_analytical = np.polyfit(L_values, np.log(E_analytical), 1)
-# ax.plot(L_values, E_numerics)
-x = np.linspace(2, 10)
+ax.plot(L_values, E_numerics, "o")
+x = np.linspace(1, 10)
 # ax.plot(x, np.exp(b_numerical)*np.exp(m_numerical*x), label=f"{m_numerical:.2}L{b_numerical:.2}")
+ax.plot(x, np.exp(-4.9-0.07*x), label=f"{m_numerical:.2}L{b_numerical:.2}")
+ax.set_xticks([2,4,6,8,10])
 # plt.title(r"$\phi_{eq}=$"+f"{phi_eq:.2}, Delta={Delta_p_A1us}")
 plt.tight_layout()
+# plt.legend(loc="lower left")
 plt.savefig('demo.pdf', transparent=True)
