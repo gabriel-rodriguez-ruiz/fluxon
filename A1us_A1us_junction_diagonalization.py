@@ -15,8 +15,8 @@ from functions import get_components
 import matplotlib.pyplot as plt
 
 
-L_x = 300
-L_y = 300
+L_x = 200
+L_y = 200
 L = 80     #L_y//2
 t = 1
 t_J = t/5
