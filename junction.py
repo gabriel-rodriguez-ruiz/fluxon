@@ -88,3 +88,27 @@ class PeriodicJunction(Junction):
                       self._index(1, j, beta)] = \
                         Superconductor_1.hopping_x[alpha, beta]
         return M + M.conj().T
+
+class PeriodicJunctionInX(PeriodicJunction):
+    """Superconductors 1 and 2 should not be periodic."""
+    def __init__(self, Superconductor_1, Superconductor_2, t_J, phi):
+        super().__init__(Superconductor_1, Superconductor_2, t_J, phi)
+        self.matrix = self._get_matrix(Superconductor_1, Superconductor_2) +\
+                            self._get_matrix_periodic_in_y(Superconductor_1,
+                                                           Superconductor_2)+\
+                            self._get_matrix_periodic_in_x(Superconductor_1,
+                                                           Superconductor_2)    
+    def _get_matrix_periodic_in_x(self, Superconductor_1, Superconductor_2):
+        """Returns the part of the tight binding matrix which connects the first
+        and  the last site in the x direction."""
+        M = scipy.sparse.lil_matrix((4*self.L_x*self.L_y,
+                                     4*self.L_x*self.L_y),
+                                    dtype=complex)
+        #hopping_y, periodic boundary conditions in Superconductor 1
+        for j in range(1, Superconductor_1.L_y+1):
+            for alpha in range(4):
+                for beta in range(4):
+                    M[self._index(self.L_x, j, alpha),
+                      self._index(1, j, beta)] = \
+                        Superconductor_1.hopping_x[alpha, beta]
+        return M + M.conj().T
