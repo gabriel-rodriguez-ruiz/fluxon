@@ -89,7 +89,7 @@ class PeriodicJunction(Junction):
                         Superconductor_1.hopping_x[alpha, beta]
         return M + M.conj().T
 
-class PeriodicJunctionInX(PeriodicJunction):
+class PeriodicJunctionInXAndY(PeriodicJunction):
     """Superconductors 1 and 2 should not be periodic."""
     def __init__(self, Superconductor_1, Superconductor_2, t_J, phi):
         super().__init__(Superconductor_1, Superconductor_2, t_J, phi)

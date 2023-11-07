@@ -57,3 +57,9 @@ ax.set_ylabel("y")
 ax.set_title("Probability density")
 ax.text(0,0, rf'$index={index}$')
 plt.tight_layout()
+
+#%%
+import os
+my_path = os.path.dirname(os.path.abspath(__file__)) # Figures out the absolute path for you in case your working directory moves around.
+my_file = 'graph.png'
+fig.savefig(os.path.join(my_path, my_file))     

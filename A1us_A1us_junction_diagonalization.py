@@ -8,20 +8,20 @@ Created on Tue Oct 24 16:14:13 2023
 import numpy as np
 from superconductor import TrivialSparseSuperconductor, \
                             A1usSparseSuperconductor                            
-from junction import Junction, PeriodicJunction, PeriodicJunctionInX
+from junction import Junction, PeriodicJunction, PeriodicJunctionInXAndY
 from phase_functions import phase_soliton_antisoliton, phase_single_soliton
 import scipy
 from functions import get_components
 import matplotlib.pyplot as plt
 
 
-L_x = 100
-L_y = 100
+L_x = 200
+L_y = 200
 L = 40     #L_y//2
 t = 1
 t_J = t/5
 Delta_p_A1us = t/5
-Delta_s_A1us = 0#t/20
+Delta_s_A1us = t/20
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0
@@ -38,7 +38,7 @@ S_2 = A1usSparseSuperconductor(L_x, L_y, t, mu, Delta_s_A1us, Delta_p_A1us)
 
 # J = PeriodicJunction(S_1, S_2, t_J, Phi)
 # J = Junction(S_1, S_2, t_J, Phi)
-J = PeriodicJunctionInX(S_1, S_2, t_J, Phi)
+J = PeriodicJunctionInXAndY(S_1, S_2, t_J, Phi)
 
 eigenvalues_sparse, eigenvectors_sparse = scipy.sparse.linalg.eigsh(J.matrix, k=n, sigma=0) 
 
@@ -49,7 +49,7 @@ for i in index:
     destruction_up, destruction_down, creation_down, creation_up = get_components(eigenvectors_sparse[:,i], J.L_x, J.L_y)
     probability_density.append((np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)/(np.linalg.norm(np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)))
     
-index = 0
+index = 2
 fig, ax = plt.subplots()
 image = ax.imshow(probability_density[index], cmap="Blues", origin="lower") #I have made the transpose and changed the origin to have xy axes as usually
 plt.colorbar(image)

@@ -4,10 +4,10 @@ import scipy
 from phase_functions import phase_soliton_antisoliton_S_around_zero, phase_soliton_antisoliton
 from superconductor import TrivialSparseSuperconductor, \
                             A1usSparseSuperconductor                            
-from junction import PeriodicJunction
+from junction import PeriodicJunction, PeriodicJunctionInXAndY
 
-L_x = 300
-L_y = 300
+L_x = 200
+L_y = 100
 t = 1
 t_J = t/5
 Delta_s_Trivial = t/5
@@ -18,7 +18,7 @@ n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
 phi_eq = 0.12*2*np.pi   #0.053*2*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
-L_values = np.linspace(1, 10, 10, dtype=int)
+L_values = np.linspace(10, 40, 5, dtype=int)
 
 eigenvalues = []
 
@@ -30,7 +30,7 @@ for L_value in L_values:
     S_A1us = A1usSparseSuperconductor(L_x, L_y, t, mu, Delta_s_A1us, Delta_p_A1us)
     # S_Trivial = TrivialSparseSuperconductor(L_x, L_y, t, mu, Delta_s_Trivial)
     # J = PeriodicJunction(S_A1us, S_Trivial, t_J, Phi)
-    J = PeriodicJunction(S_A1us, S_A1us, t_J, Phi)
+    J = PeriodicJunctionInXAndY(S_A1us, S_A1us, t_J, Phi)
     eigenvalues_sparse, eigenvectors_sparse = scipy.sparse.linalg.eigsh(J.matrix, k=n, sigma=0) 
     eigenvalues_sparse.sort()
     eigenvalues.append(eigenvalues_sparse)
