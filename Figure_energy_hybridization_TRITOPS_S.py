@@ -25,7 +25,7 @@ E_numerics = E_numerical[n//2+1]
 # plt.style.use('./Images/paper.mplstyle')
 
 fig, ax = plt.subplots(dpi=300)
-ax.plot(L_values, E_numerical[n//2], "o")
+ax.plot(L_values, abs(E_numerical[0]), "o")
 ax.plot(L_values, E_numerical[n//2+1], "*")
 ax.plot(L_values, E_numerical[n//2+2], ".")
 ax.plot(L_values, E_numerical[n//2+3], ".")
