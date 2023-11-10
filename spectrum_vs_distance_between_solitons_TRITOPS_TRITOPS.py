@@ -1,31 +1,31 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy
-from phase_functions import phase_soliton_antisoliton_S_around_zero, phase_soliton_antisoliton
-from superconductor import TrivialSparseSuperconductor, \
-                            A1usSparseSuperconductor                            
-from junction import PeriodicJunction, PeriodicJunctionInXAndY
+from phase_functions import phase_soliton_antisoliton
+from superconductor import A1usSparseSuperconductor                            
+from junction import PeriodicJunctionInXAndY
 
-L_x = 75#300
-L_y = 150
+L_x = 150
+L_y = 300
 t = 1
 t_J = t/25
-Delta_s_Trivial = t/5
 Delta_p_A1us = t/5
 Delta_s_A1us = 0
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
-phi_eq = 0.12*2*np.pi   #0.053*2*np.pi    #0.14*2*np.pi
+phi_eq = 0
 y = np.arange(1, L_y+1)
 L_values = np.linspace(1, 10, 10, dtype=int)
+L_min = 1
+L_max = 10
 
-params = {"L_x":L_x, "L_y":L_y, "t":t, "t_J":t_J,
-          "Delta_s_Trivial":Delta_s_Trivial,
+params = {"L_min":L_min, "L_max":L_max, "L_x":L_x, "L_y":L_y,
+          "t":t, "t_J":t_J,
           "Delta_p_A1us":Delta_p_A1us,
           "Delta_s_A1us":Delta_s_A1us,
           "mu":mu, "n":n, "phi_external":phi_external,
-          "phi_eq":phi_eq, "L_values":L_values
+          "phi_eq":phi_eq
           }
 
 eigenvalues = []
@@ -33,11 +33,8 @@ eigenvalues = []
 for L_value in L_values:
     y_0 = (L_y-L_value)//2
     y_1 = (L_y+L_value)//2
-    # Phi = phase_soliton_antisoliton_S_around_zero(phi_external, phi_eq, y, y_0, y_1)
     Phi = phase_soliton_antisoliton(phi_external, y, y_0, y_1)
     S_A1us = A1usSparseSuperconductor(L_x, L_y, t, mu, Delta_s_A1us, Delta_p_A1us)
-    # S_Trivial = TrivialSparseSuperconductor(L_x, L_y, t, mu, Delta_s_Trivial)
-    # J = PeriodicJunction(S_A1us, S_Trivial, t_J, Phi)
     J = PeriodicJunctionInXAndY(S_A1us, S_A1us, t_J, Phi)
     eigenvalues_sparse, eigenvectors_sparse = scipy.sparse.linalg.eigsh(J.matrix, k=n, sigma=0) 
     eigenvalues_sparse.sort()
@@ -52,9 +49,9 @@ for j in index:
 import os
 my_path = os.path.dirname(os.path.abspath(__file__)) # Figures out the absolute path for you in case your working directory moves around.
 my_directory = "Data"
-my_file = "Spectrum_vs_length"+";"+";".join(f"{key}={params[key]}" for key, value in params.items())
+my_file = "TRITOPS_TRITOPS_spectrum_vs_distance_between_soliton"+";"+";".join(f"{key}={params[key]}" for key, value in params.items())
 np.savez(os.path.join(my_path, my_directory, my_file), params=params,
-         E_numerical=E_numerical, index=index)
+         E_numerical=E_numerical, L_values=L_values)
 #%% Plotting
 
 plt.rc("font", family="serif")  # set font family
