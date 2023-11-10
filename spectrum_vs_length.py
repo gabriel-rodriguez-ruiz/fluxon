@@ -20,6 +20,8 @@ phi_eq = 0.12*2*np.pi   #0.053*2*np.pi    #0.14*2*np.pi
 y = np.arange(1, L_y+1)
 L_values = np.linspace(1, 10, 10, dtype=int)
 
+params = {"L_x": L_x, "L_y": L_y}
+
 eigenvalues = []
 
 for L_value in L_values:
@@ -40,6 +42,11 @@ E_numerical = []
 for j in index:
     E_numerical.append(np.array([eigenvalues[i][j] for i in range(len(L_values))]))
 
+#%% Saving
+import os
+my_path = os.path.dirname(os.path.abspath(__file__)) # Figures out the absolute path for you in case your working directory moves around.
+my_file = "Spectrum_vs_length"+" "+";".join(f"{key}:{value}" for key, value in params.items())
+np.savez(my_file, params)
 #%% Plotting
 
 plt.rc("font", family="serif")  # set font family
