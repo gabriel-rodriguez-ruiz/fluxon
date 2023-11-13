@@ -32,6 +32,15 @@ y_0 = (L_y-L)//2
 y_1 = (L_y+L)//2
 y_s = (L_y+1)//2
 
+params = {"L_x":L_x, "L_y":L_y, "t":t, "t_J":t_J,
+          "Delta_s_Trivial":Delta_s_Trivial,
+          "Delta_p_A1us":Delta_p_A1us,
+          "Delta_s_A1us":Delta_s_A1us,
+          "mu":mu, "n":n, "phi_external":phi_external,
+          "phi_eq":phi_eq, "L":L
+          }
+
+
 Phi = phase_soliton_antisoliton_S_around_zero(phi_external, phi_eq, y, y_0, y_1)
 
 S_A1us = A1usSparseSuperconductor(L_x, L_y, t, mu, Delta_s_A1us, Delta_p_A1us)
@@ -42,6 +51,7 @@ J = PeriodicJunction(S_A1us, S_Trivial, t_J, Phi)
 
 eigenvalues_sparse, eigenvectors_sparse = scipy.sparse.linalg.eigsh(J.matrix, k=n, sigma=0) 
 
+
 #%% Probability density
 index = np.arange(n)   #which zero mode (less than k)
 probability_density = []
@@ -49,6 +59,17 @@ for i in index:
     destruction_up, destruction_down, creation_down, creation_up = get_components(eigenvectors_sparse[:,i], J.L_x, J.L_y)
     probability_density.append((np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)/(np.linalg.norm(np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)))
     
+    
+#%% Saving
+import os
+my_path = os.path.dirname(os.path.abspath(__file__)) # Figures out the absolute path for you in case your working directory moves around.
+my_directory = "Data"
+my_file = "Double_soliton"+";"+";".join(f"{key}={params[key]}" for key, value in params.items())
+np.savez(os.path.join(my_path, my_directory, my_file), params=params,
+         eigenvalues_sparse=eigenvalues_sparse,
+         eigenvectors_sparse=eigenvectors_sparse, index=index,
+         probability_density=probability_density)
+
 index = 2
 fig, ax = plt.subplots()
 image = ax.imshow(probability_density[index], cmap="Blues", origin="lower") #I have made the transpose and changed the origin to have xy axes as usually
