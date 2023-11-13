@@ -26,8 +26,8 @@ n = 36      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
 phi_eq = 0.12*2*np.pi
 y = np.arange(1, L_y+1)
-L_min = 10
-L_max = 100
+L_min = 1
+L_max = 10
 L_values = np.linspace(L_min, L_max, 10, dtype=int)
 
 params = {"L_min":L_min, "L_max":L_max, "L_x":L_x, "L_y":L_y, "t":t, "t_J":t_J,
