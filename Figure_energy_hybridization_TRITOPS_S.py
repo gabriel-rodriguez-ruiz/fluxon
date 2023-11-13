@@ -14,6 +14,7 @@ my_directory = "Data"
 # my_file = "TRITOPS_S_spectrum_vs_distance_between_soliton;L_min=10;L_max=100;L_x=300;L_y=300;t=1;t_J=0.2;Delta_s_Trivial=0.2;Delta_p_A1us=0.2;Delta_s_A1us=0.05;mu=-2;n=12;phi_external=0.0;phi_eq=0.754.npz"
 my_file = "TRITOPS_S_spectrum_vs_distance_between_soliton;L_min=10;L_max=100;L_x=300;L_y=300;t=1;t_J=0.2;Delta_s_Trivial=0.2;Delta_p_A1us=0.2;Delta_s_A1us=0.05;mu=-2;n=36;phi_external=0.0;phi_eq=0.754.npz"
 
+
 data = np.load(os.path.join(my_path, my_directory, my_file),
                allow_pickle=True)
 
@@ -24,7 +25,7 @@ L_values = data["L_values"]
 n = params["n"]
 
 E_numerics = E_numerical[n//2+1]
-# plt.style.use('./Images/paper.mplstyle')
+plt.style.use('./Images/paper.mplstyle')
 
 fig, ax = plt.subplots(dpi=300)
 ax.plot(L_values, abs(E_numerical[0]), "o")
