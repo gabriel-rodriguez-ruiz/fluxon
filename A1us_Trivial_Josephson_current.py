@@ -21,7 +21,15 @@ Delta_s_A1us = t/20
 mu = -2*t
 t_J = t/5
 phi_values = np.linspace(0, 2*np.pi, 100)
-k_values = np.linspace(0, np.pi, 100)
+k_values = np.linspace(0, np.pi, 75)
+
+params = {"L_x":L_x, "t":t, "t_J":t_J,
+          "Delta_s_Trivial":Delta_s_Trivial,
+          "Delta_p_A1us":Delta_p_A1us,
+          "Delta_s_A1us":Delta_s_A1us,
+          "mu":mu, "phi_values":phi_values,
+          "k_values": k_values,
+          }
 
 eigenvalues = []
 for k in k_values:
@@ -100,11 +108,12 @@ E_0 = popt[0]
 E_J = popt[1]
 fig, ax = plt.subplots()
 ax.plot(phi_values/(2*np.pi), -total_energy+total_energy[0], label="Numerical")
-ax.plot(phi_values/(2*np.pi), energy(phi_values, E_0, E_J))
+ax.plot(np.linspace(0, 1, 1000), energy(np.linspace(0, 2*np.pi, 1000), E_0, E_J))
 ax.set_xlabel(r"$\phi/(2\pi)$")
 ax.set_ylabel(r"$E(\phi)$")
 ax.set_title(r"$\phi_{0}=$"+f"{(2*np.pi-phi_eq[0])/(2*np.pi):.2}"+r"$\times 2\pi$")
 
 # plt.legend()
 plt.tight_layout()
-np.savez("phi_eq=0.12", E=-total_energy+total_energy[0], E_fit=energy(phi_values, E_0, E_J), phi=phi_values/(2*np.pi))
+# np.savez("Data/phi_eq=0.13.npz", E=-total_energy+total_energy[0], E_fit=energy(phi_values, E_0, E_J), phi=phi_values,
+#          params=params, E_0=E_0, E_J=E_J, phi_eq=phi_eq)

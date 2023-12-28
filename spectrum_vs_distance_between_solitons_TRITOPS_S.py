@@ -26,16 +26,17 @@ n = 36      #number of eigenvalues in sparse diagonalization
 phi_external = 0.
 phi_eq = 0.12*2*np.pi
 y = np.arange(1, L_y+1)
-L_min = 1
-L_max = 10
+L_min = 3
+L_max = 30
 L_values = np.linspace(L_min, L_max, 10, dtype=int)
-
+sigma = 1e-3   #search eingenvalues around this energy
 params = {"L_min":L_min, "L_max":L_max, "L_x":L_x, "L_y":L_y, "t":t, "t_J":t_J,
           "Delta_s_Trivial":Delta_s_Trivial,
           "Delta_p_A1us":Delta_p_A1us,
           "Delta_s_A1us":Delta_s_A1us,
           "mu":mu, "n":n, "phi_external":phi_external,
-          "phi_eq":np.round(phi_eq,3)
+          "phi_eq":np.round(phi_eq,3),
+          "sigma":0
           }
 
 eigenvalues = []
@@ -47,7 +48,7 @@ for L_value in L_values:
     S_A1us = A1usSparseSuperconductor(L_x, L_y, t, mu, Delta_s_A1us, Delta_p_A1us)
     S_Trivial = TrivialSparseSuperconductor(L_x, L_y, t, mu, Delta_s_Trivial)
     J = PeriodicJunction(S_A1us, S_Trivial, t_J, Phi)
-    eigenvalues_sparse, eigenvectors_sparse = scipy.sparse.linalg.eigsh(J.matrix, k=n, sigma=0) 
+    eigenvalues_sparse, eigenvectors_sparse = scipy.sparse.linalg.eigsh(J.matrix, k=n, sigma=sigma) 
     eigenvalues_sparse.sort()
     eigenvalues.append(eigenvalues_sparse)
     print(L_value)

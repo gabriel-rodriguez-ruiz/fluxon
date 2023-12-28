@@ -15,8 +15,8 @@ from functions import get_components
 import matplotlib.pyplot as plt
 
 
-L_x = 300
-L_y = 300
+L_x = 300 #300
+L_y = 300#300
 L = 100     #L_y//2
 t = 1
 t_J = t/5
@@ -57,8 +57,8 @@ index = np.arange(n)   #which zero mode (less than k)
 probability_density = []
 for i in index:
     destruction_up, destruction_down, creation_down, creation_up = get_components(eigenvectors_sparse[:,i], J.L_x, J.L_y)
-    probability_density.append((np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)/(np.linalg.norm(np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)))
-    
+    # probability_density.append((np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)/(np.linalg.norm(np.abs(destruction_up)**2 + np.abs(destruction_down)**2 + np.abs(creation_down)**2 + np.abs(creation_up)**2)))
+    probability_density.append((np.abs(destruction_up)**2 + np.abs(destruction_down)**2 )/(np.linalg.norm(np.abs(destruction_up)**2 + np.abs(destruction_down)**2 )))
     
 #%% Saving
 import os
@@ -69,6 +69,8 @@ np.savez(os.path.join(my_path, my_directory, my_file), params=params,
          eigenvalues_sparse=eigenvalues_sparse,
          eigenvectors_sparse=eigenvectors_sparse, index=index,
          probability_density=probability_density)
+
+#%%
 
 index = 2
 fig, ax = plt.subplots()
@@ -89,4 +91,4 @@ ax.set_xlabel(r"$\ell$")
 ax.set_ylabel("Probability density at the junction")
 ax.text(5,25, rf'$index={index}$')
 
-np.savez("L=100", y=y, psi=probability_density_right)
+# np.savez("L=100", y=y, psi=probability_density_right)

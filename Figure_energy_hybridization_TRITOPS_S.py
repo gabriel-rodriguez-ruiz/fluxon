@@ -28,8 +28,7 @@ E_numerics = E_numerical[n//2+1]
 plt.style.use('./Images/paper.mplstyle')
 
 fig, ax = plt.subplots(dpi=300)
-ax.plot(L_values, abs(E_numerical[0]), "o")
-ax.plot(L_values, E_numerical[n//2+1], "*")
+ax.plot(L_values, E_numerical[n//2+1], ".")
 ax.plot(L_values, E_numerical[n//2+2], ".")
 ax.plot(L_values, E_numerical[n//2+3], ".")
 ax.plot(L_values, E_numerical[n//2+4], ".")
@@ -45,7 +44,18 @@ ax.plot(L_values, E_numerical[n//2+13], ".")
 ax.plot(L_values, E_numerical[n//2+14], ".")
 ax.plot(L_values, E_numerical[n//2+15], ".")
 
-# ax.plot(L_values, E_numerics, "o")
+E_numerics = [E_numerical[n//2+1][0],
+              E_numerical[n//2+1][1],
+              E_numerical[n//2+15][2],
+              E_numerical[n//2+9][3],
+              E_numerical[n//2+5][4],
+              E_numerical[n//2+3][5],
+              E_numerical[n//2+3][6],
+              E_numerical[n//2+1][7],
+              E_numerical[n//2+1][8],
+              E_numerical[n//2+1][9]]
+
+ax.plot(L_values, E_numerics, "o")
 ax.set_yscale('log')
 
 ax.set_xlabel("x")

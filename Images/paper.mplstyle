@@ -1,33 +1,23 @@
-axes.titlesize : 18
-axes.labelsize : 12
-axes.linewidth : 0.2
+axes.labelsize : 10
 
 figure.dpi : 100	#default
-figure.figsize : 3.375, 2.531
+figure.figsize : 3.375, 2.531		#width 3 3/8 inches; Aspect ratio 4:3
 
 font.family : "serif"
-font.size : 12
 
-legend.fontsize : 18
-
-lines.linewidth : 2
+lines.linewidth : 1
 lines.markersize : 2
 
 text.usetex : True
 
-xtick.labelsize : 12
+xtick.labelsize : 8
 xtick.top : True
 xtick.labeltop : False
-xtick.major.size : 4
-xtick.major.width : 0.2 
 
-ytick.labelsize : 12
+ytick.labelsize : 8
 ytick.right : True
 ytick.labelright : False
-ytick.major.size : 4
-ytick.major.width : 0.2 
-ytick.minor.size : 4
-ytick.minor.width : 0.2 
+
 
 
 
