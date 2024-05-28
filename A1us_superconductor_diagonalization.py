@@ -16,7 +16,7 @@ L_x = 200
 L_y = 100
 t = 1
 Delta_s = t/20
-Delta_p = t/5
+Delta_p = t/40#t/5
 mu = -2*t
 n = 12      #number of eigenvalues in sparse diagonalization
 k_values = np.linspace(0, np.pi, L_y)
@@ -62,4 +62,4 @@ plt.tight_layout()
 import os
 my_path = os.path.dirname(os.path.abspath(__file__)) # Figures out the absolute path for you in case your working directory moves around.
 my_file = 'graph.png'
-fig.savefig(os.path.join(my_path, my_file))     
+#fig.savefig(os.path.join(my_path, my_file))     

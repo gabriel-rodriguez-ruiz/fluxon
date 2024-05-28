@@ -13,18 +13,18 @@ from junction import Junction, PeriodicJunction
 import scipy
 import matplotlib.pyplot as plt
 
-L_x = 300
+L_x = 50#300
 t = 1
-Delta_s_Trivial = t/5
-Delta_p_A1us = t/5      #topologic if Delta_p>Delta_s
-Delta_s_A1us = t/20
+#Delta_s_Trivial = t/5
+Delta_p_A1us = t/5#t/5      #topologic if Delta_p>Delta_s
+Delta_s_A1us = t/6#t/20
 mu = -2*t
-t_J = t/5
+t_J = t/5#t/5
 phi_values = np.linspace(0, 2*np.pi, 50)
 k_values = np.linspace(0, np.pi, 50)
 
 params = {"L_x":L_x, "t":t, "t_J":t_J,
-          "Delta_s_Trivial":Delta_s_Trivial,
+          #"Delta_s_Trivial":Delta_s_Trivial,
           "Delta_p_A1us":Delta_p_A1us,
           "Delta_s_A1us":Delta_s_A1us,
           "mu":mu, "phi_values":phi_values,
