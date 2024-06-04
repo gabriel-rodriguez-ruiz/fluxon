@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 25 15:37:20 2023
+Created on Wed May 29 15:35:48 2024
 
 @author: gabriel
 """
+
 import numpy as np
-from superconductor import A1usSuperconductorKY, \
+from superconductor import ZKMSuperconductorKY, \
                             TrivialSuperconductorKY
 from functions import phi_spectrum       
 from junction import Junction, PeriodicJunction
@@ -15,18 +16,18 @@ import matplotlib.pyplot as plt
 
 L_x = 200#300
 t = 1
-#Delta_s_Trivial = t/5
-Delta_p_A1us = t/20#t/5      #topologic if Delta_p>Delta_s
-Delta_s_A1us = t/20#t/20
-mu = -3.5*t#-2*t
-t_J = t#t/2#t/5
+Delta_0 = 0.4#0.2#0.4    
+Delta_1 = 0.2
+Lambda = 0.5
+mu = 2*t#t#2*t
+t_J = t/2#t#t/2
 phi_values = np.linspace(0, 2*np.pi, 50)
-k_values = np.linspace(0, np.pi/4, 5)
+k_values = np.linspace(-np.pi, -np.pi+np.pi/4, 5)
 
 params = {"L_x":L_x, "t":t, "t_J":t_J,
-          #"Delta_s_Trivial":Delta_s_Trivial,
-          "Delta_p_A1us":Delta_p_A1us,
-          "Delta_s_A1us":Delta_s_A1us,
+          "Delta_0":Delta_0,
+          "Delta_1":Delta_1,
+          "Lambda":Lambda,
           "mu":mu, "phi_values":phi_values,
           "k_values": k_values,
           }
@@ -37,8 +38,8 @@ for k in k_values:
     print(k)
     for phi in phi_values:
         phi = np.array([phi])   #array of length 1
-        S_A1us = A1usSuperconductorKY(k, L_x, t, mu, Delta_s_A1us, Delta_p_A1us)
-        J = Junction(S_A1us, S_A1us, t_J, phi)
+        S_ZKM = ZKMSuperconductorKY(k, L_x, t, mu, Delta_0, Delta_1, Lambda)
+        J = Junction(S_ZKM, S_ZKM, t_J, phi)
         energies = np.linalg.eigvalsh(J.matrix.toarray())
         energies = list(energies)
         eigenvalues_k.append(energies)
